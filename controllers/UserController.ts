@@ -1,6 +1,7 @@
 import {Request, Response, Express} from "express";
 import UserDAO from "../daos/UserDao"
 import UserControllerI from "../interfaces/UserController";
+import User from "../models/User";
 
 export default class UserController implements UserControllerI {
     app: Express;
@@ -10,7 +11,7 @@ export default class UserController implements UserControllerI {
         this.app = app;
         this.userDao = userDao;
         this.app.get('/users', this.findAllUsers);
-        this.app.get('/users/:uid', this.findAllUsers);
+        this.app.get('/users/:uid', this.findUserById);
         this.app.post('/users', this.createUser);
         this.app.delete('/users/:uid', this.deleteUser);
         this.app.put('/users/:uid', this.updateUser);
@@ -24,9 +25,10 @@ export default class UserController implements UserControllerI {
         this.userDao.findUserById(req.params.uid)
             .then(user => res.json(user));
 
-    createUser = (req: Request, res: Response) =>
+    createUser = (req: Request, res: Response) => {
         this.userDao.createUser(req.body)
             .then(user => res.json(user));
+    }
 
     deleteUser = (req: Request, res: Response) =>
         this.userDao.deleteUser(req.params.uid)

@@ -8,6 +8,13 @@ const app = express();
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/tuiter');
 
+// configure HTTP body parser
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+
 app.get('/hello', (req, res) =>
     res.send('Hello World!'));
 
