@@ -1,7 +1,6 @@
 import User from "../models/User";
 import UserModel from "../mongoose/UserModel";
 import UserDaoI from "../interfaces/UserDao";
-import userModel from "../mongoose/UserModel";
 
 export default class UserDao implements UserDaoI {
     async findAllUsers(): Promise<User[]> {
@@ -13,11 +12,15 @@ export default class UserDao implements UserDaoI {
     }
 
     async createUser(user: User): Promise<User> {
-        return await userModel.create(user);
+        return await UserModel.create(user);
     }
 
+    // createUser = (user: User) => {
+    //     return userModel.create((user))
+    // }
+
     async deleteUser(uid: string): Promise<any> {
-        return userModel.deleteOne({_id: uid});
+        return UserModel.deleteOne({_id: uid});
     }
 
     async updateUser(uid: string, user: User): Promise<any> {
