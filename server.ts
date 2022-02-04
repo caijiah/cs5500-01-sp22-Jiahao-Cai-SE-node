@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from "mongoose";
 import dotenv from "dotenv"
+import cors from "cors";
 import bodyParser from "body-parser";
 import TuitController from "./controllers/TuitController";
 import UserController from "./controllers/UserController";
@@ -9,11 +10,9 @@ import UserController from "./controllers/UserController";
 const app = express();
 
 dotenv.config();
-const MONGODB_URI = process.env.MONGODB_URI;
-// replace with "mongodb://localhost:27017/tuiter
-// or
-// mongodb+srv://giuseppi:supersecretpassword@cluster0.hvtfs.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
-mongoose.connect(MONGODB_URI!);
+app.use(cors());
+const MONGODB_URI = "mongodb://localhost:27017/tuiter";
+mongoose.connect(process.env.MONGODB_URI || MONGODB_URI);
 
 // configure HTTP body parser
 app.use(bodyParser.json());
