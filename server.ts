@@ -10,6 +10,9 @@ const app = express();
 
 dotenv.config();
 const MONGODB_URI = process.env.MONGODB_URI;
+// replace with "mongodb://localhost:27017/tuiter
+// or
+// mongodb+srv://giuseppi:supersecretpassword@cluster0.hvtfs.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
 mongoose.connect(MONGODB_URI!);
 
 // configure HTTP body parser
