@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
-import AccountType from "../models/AccountType";
-import MaritalStatus from "../models/MaritalStatus";
+import AccountType from "../../models/users/AccountType";
+import MaritalStatus from "../../models/users/MaritalStatus";
 import LocationSchema from "./LocationSchema";
+import User from "../../models/users/User";
 
-const UserSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema<User>({
     username: {type: String, required: true},
     password: {type: String, required: true},
     firstName: String,

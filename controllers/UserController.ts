@@ -1,40 +1,44 @@
 import {Request, Response, Express} from "express";
 import UserDAO from "../daos/UserDao"
-import UserControllerI from "../interfaces/UserController";
-import User from "../models/User";
+import UserControllerI from "../interfaces/UserControllerI";
+import UserDao from "../daos/UserDao";
+import User from "../models/users/User";
 
 export default class UserController implements UserControllerI {
-    app: Express;
-    userDao: UserDAO;
-
-    constructor(app: Express, userDao: UserDAO) {
-        this.app = app;
-        this.userDao = userDao;
-        this.app.get('/users', this.findAllUsers);
-        this.app.get('/users/:uid', this.findUserById);
-        this.app.post('/users', this.createUser);
-        this.app.delete('/users/:uid', this.deleteUser);
-        this.app.put('/users/:uid', this.updateUser);
+    private static userDao: UserDAO = UserDao.getInstance();
+    private static userController: UserController | null = null;
+    public static getInstance = (app: Express): UserController => {
+        if (UserController.userController === null) {
+            UserController.userController = new UserController();
+            app.get('/api/users', UserController.userController.findAllUsers);
+            app.get('/api/users/:uid', UserController.userController.findUserById);
+            app.post('/api/users', UserController.userController.createUser);
+            app.delete('/api/users/:uid', UserController.userController.deleteUser);
+            app.put('/api/users/:uid', UserController.userController.updateUser);
+        }
+        return UserController.userController;
     }
 
+    private constructor() {}
+
     findAllUsers = (req: Request, res: Response) =>
-        this.userDao.findAllUsers()
-            .then(users => res.json(users));
+        UserController.userDao.findAllUsers()
+            .then((users: User[]) => res.json(users));
 
     findUserById = (req: Request, res: Response) =>
-        this.userDao.findUserById(req.params.uid)
-            .then(user => res.json(user));
+        UserController.userDao.findUserById(req.params.uid)
+            .then((user: User) => res.json(user));
 
     createUser = (req: Request, res: Response) => {
-        this.userDao.createUser(req.body)
-            .then(user => res.json(user));
+        UserController.userDao.createUser(req.body)
+            .then((user: User) => res.json(user));
     }
 
     deleteUser = (req: Request, res: Response) =>
-        this.userDao.deleteUser(req.params.uid)
+        UserController.userDao.deleteUser(req.params.uid)
             .then(status => res.json(status))
 
     updateUser = (req: Request, res: Response) =>
-        this.userDao.updateUser(req.params.uid, req.body)
+        UserController.userDao.updateUser(req.params.uid, req.body)
             .then(status => res.json(status))
 }

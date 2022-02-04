@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import Tuit from "../../models/tuits/Tuit";
 
-const TuitSchema = new mongoose.Schema({
+const TuitSchema = new mongoose.Schema<Tuit>({
     tuit: String,
     postedOn: {type: Date, default: Date.now},
     postedBy: {
