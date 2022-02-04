@@ -1,13 +1,16 @@
 import express from 'express';
 import mongoose from "mongoose";
+import dotenv from "dotenv"
 import bodyParser from "body-parser";
 import TuitController from "./controllers/TuitController";
 import UserController from "./controllers/UserController";
-import UserDao from "./daos/UserDao";
-import TuitDao from "./daos/TuitDao";
+
 
 const app = express();
-mongoose.connect('mongodb://localhost:27017/tuiter');
+
+dotenv.config();
+const MONGODB_URI = process.env.MONGODB_URI;
+mongoose.connect(MONGODB_URI!);
 
 // configure HTTP body parser
 app.use(bodyParser.json());
