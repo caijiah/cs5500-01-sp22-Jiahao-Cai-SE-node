@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import Tuit from "../../models/tuits/Tuit";
 
 const TuitSchema = new mongoose.Schema<Tuit>({
-    tuit: String,
+    tuit: {type: String, required: true},
     postedOn: {type: Date, default: Date.now},
     postedBy: {
         type: mongoose.Schema.Types.ObjectId,

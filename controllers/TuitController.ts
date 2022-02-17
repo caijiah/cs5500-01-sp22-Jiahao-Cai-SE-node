@@ -7,7 +7,8 @@ import User from "../models/users/User";
 export default class TuitController implements TuitControllerI {
     private static tuitDao: TuitDao = TuitDao.getInstance();
     private static tuitController: TuitController | null = null;
-    public static getInstance = (app: Express) => {
+
+    public static getInstance = (app: Express): TuitController => {
         if (TuitController.tuitController === null) {
             TuitController.tuitController = new TuitController();
             app.get('/api/tuits', TuitController.tuitController.findAllTuits);
@@ -18,6 +19,7 @@ export default class TuitController implements TuitControllerI {
             app.delete('/api/tuits/:tid', TuitController.tuitController.deleteTuit);
             app.put('/api/tuits/:tid', TuitController.tuitController.updateTuit)
         }
+        return TuitController.tuitController
     }
 
     private constructor() {}
