@@ -5,6 +5,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import TuitController from "./controllers/TuitController";
 import UserController from "./controllers/UserController";
+import LikeController from "./controllers/LikeController";
 
 
 const app = express();
@@ -29,6 +30,7 @@ app.get('/add/:a/:b', (req, res) => {
 
 const userController = UserController.getInstance(app);
 const tuitController = TuitController.getInstance(app);
+const likeController = LikeController.getInstance(app);
 
 const PORT = 4000;
 app.listen(process.env.PORT || PORT);
