@@ -11,8 +11,7 @@ export default class LikeDao implements LikeDaoI {
         return LikeDao.likeDao;
     }
 
-    private constructor() {
-    }
+    private constructor() {}
 
     findAllUsersThatLikedTuit = async (tid: string): Promise<Like[]> =>
         LikeModel.find({tuit: tid})
@@ -29,4 +28,10 @@ export default class LikeDao implements LikeDaoI {
 
     userUnlikesTuit = async (tid: string, uid: string): Promise<any> =>
         LikeModel.deleteOne({tuit: tid, likedBy: uid})
+
+    findAllLike = async (): Promise<Like[]> =>
+        LikeModel.find()
+            .populate('tuit')
+            .populate('likedBy', {username: 1})
+            .exec();
 }

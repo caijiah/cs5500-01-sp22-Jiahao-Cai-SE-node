@@ -5,4 +5,5 @@ export default interface LikeControllerI {
     findAllTuitsLikedByUser(req: Request, res: Response): void;
     userLikesTuit(req: Request, res: Response): void;
     userUnLikesTuit(req: Request, res: Response): void;
+    findAllLike(req: Request, res: Response): void;
 }
