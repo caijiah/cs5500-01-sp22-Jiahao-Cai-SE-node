@@ -76,25 +76,38 @@ export default class LikeController implements LikeControllerI {
             .then((likes: Like[]) => res.json(likes));
 
     /**
-     * Records that user likes a tuit
+     * Creates a new like instance to record that user likes a tuit
      * @param {Request} req Represents request from client, including the path
      * parameter tid and uid representing the tuit being liked and the user that
      * is liking the tuit
-     * @param {Response} res
+     * @param {Response} res Represents response to client, including the
+     * body formatted as JSON containing the new like that was inserted in
+     * the database
      */
     userLikesTuit = (req: Request, res: Response) =>
         LikeController.likeDao.userLikesTuit(req.params.tid, req.params.uid)
             .then((like: Like) => res.json(like))
 
     /**
-     * Records that user no longer likes the tuit
-     * @param req
-     * @param res
+     * Removes a like instance to record that user no longer likes the tuit
+     * @param {Request} req Represents request from client, including the path
+     * parameter tid and uid representing the tuit being unliked and the user is
+     * unliking the tuit
+     * @param {Response} res Represents response to client, including status
+     * on whether deleting the like was successful or not
      */
     userUnLikesTuit = (req: Request, res: Response) =>
         LikeController.likeDao.userUnlikesTuit(req.params.tid, req.params.uid)
             .then(status => res.send(status))
 
+    /**
+     * Retrieves all likes from the database and returns an array of likes (including
+     * all tuits being liked and users liking the tuit)
+     * @param {Request} req Represents request from client
+     * @param {Response} res Represents response to client, including the
+     * body formatted as JSON arrays containing the likes objects (including all
+     * tuits being liked and users liking the tuit)
+     */
     findAllLike = (req: Request, res: Response) =>
         LikeController.likeDao.findAllLike()
             .then((likes: Like[]) => res.json(likes));
