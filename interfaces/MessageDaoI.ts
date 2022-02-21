@@ -1,3 +1,6 @@
+/**
+ * @file Declares API for Messages related data access object methods
+ */
 import Message from "../models/messages/Message";
 
 export default interface MessageDaoI {
