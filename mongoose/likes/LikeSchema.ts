@@ -14,4 +14,5 @@ const LikeSchema = new mongoose.Schema<Like>({
     likedBy: {type: Schema.Types.ObjectId, ref: 'UserModel'}
 }, {collection: "likes"})
 
+LikeSchema.index({tuit: 1, likedBy: 1})
 export default LikeSchema
