@@ -5,3 +5,4 @@ data
 dump
 .env
 *.zip
+out

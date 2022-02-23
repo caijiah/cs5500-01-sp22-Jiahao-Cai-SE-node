@@ -1,3 +1,6 @@
+/**
+ * @file Declares Controller RESTful Web service API for follows resource
+ */
 import {Request, Response} from "express";
 
 export default interface FollowControllerI {
