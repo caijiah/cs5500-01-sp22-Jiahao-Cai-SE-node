@@ -14,6 +14,10 @@ import User from "../models/users/User";
  *     <li>GET /api/users to retrieve all the user instances</li>
  *     <li>GET /api/users/:uid to retrieve an individual user instance </li>
  *     <li>POST /api/users to create a new user instance</li>
+ *     <li>POST /api/login to retrieve an individual user instance by their credential for
+ *     logging in</li>
+ *     <li>POST /api/register to create an individual user instance assuring there is
+ *     no repeating username</li>
  *     <li>PUT /api/users to modify an individual user instance </li>
  *     <li>DELETE /api/users/:uid to remove a particular user instance</li>
  * </ul>
@@ -37,6 +41,8 @@ export default class UserController implements UserControllerI {
             app.get('/api/users', UserController.userController.findAllUsers);
             app.get('/api/users/:uid', UserController.userController.findUserById);
             app.post('/api/users', UserController.userController.createUser);
+            app.post('/api/login', UserController.userController.login);
+            app.post('/api/register', UserController.userController.register)
             app.put('/api/users/:uid', UserController.userController.updateUser);
             app.delete('/api/users/:uid', UserController.userController.deleteUser);
         }
@@ -127,7 +133,7 @@ export default class UserController implements UserControllerI {
     }
 
     /**
-     * Creates a new user instance assuring there is no repeating username 
+     * Creates a new user instance assuring there is no repeating username
      * @param {Request} req Represents request from client, including body
      * containing the JSON object for the new user to be inserted in the database
      * @param {Response} res Represents response to client, including the
