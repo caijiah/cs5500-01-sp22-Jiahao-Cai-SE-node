@@ -11,15 +11,15 @@ import User from "../models/users/User";
  * @class UserController Implements RESTful Web service API for users resource.
  * Defines the following HTTP endpoints:
  * <ul>
- *     <li>GET /api/users to retrieve all the user instances</li>
+ *     <li>GET /api/users to retrieve all the user instances </li>
  *     <li>GET /api/users/:uid to retrieve an individual user instance </li>
- *     <li>POST /api/users to create a new user instance</li>
+ *     <li>POST /api/users to create a new user instance </li>
  *     <li>POST /api/login to retrieve an individual user instance by their credential for
- *     logging in</li>
+ *     logging in </li>
  *     <li>POST /api/register to create an individual user instance assuring there is
- *     no repeating username</li>
+ *     no repeating username </li>
  *     <li>PUT /api/users to modify an individual user instance </li>
- *     <li>DELETE /api/users/:uid to remove a particular user instance</li>
+ *     <li>DELETE /api/users/:uid to remove a particular user instance </li>
  * </ul>
  * @property {UserDao} userDao Singleton DAO implementing user CRUD operations
  * @property {UserController} userController Singleton controller implementing
