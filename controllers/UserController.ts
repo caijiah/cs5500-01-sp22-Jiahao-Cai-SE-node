@@ -106,9 +106,13 @@ export default class UserController implements UserControllerI {
 
 
     /**
-     *
-     * @param req
-     * @param res
+     * Retrieves the user by their credential for logging in
+     * @param {Request} req Represents request from client, including body
+     * containing the JSON object for a user's credential containing
+     * username and password
+     * @param {Response} res Represents response to client, including the
+     * body formatted as JSON containing the user that matches the credential
+     * or the status that there is no user matches the credential (failed to log in)
      */
     login = (req: Request, res: Response) => {
         const credentials = req.body;
@@ -123,27 +127,26 @@ export default class UserController implements UserControllerI {
     }
 
     /**
-     *
-     * @param req
-     * @param res
-     */
-    logout = (req: Request, res: Response) => {
-        // implement session later...
-    }
-
-    /**
-     *
-     * @param req
-     * @param res
+     * Creates a new user instance assuring there is no repeating username 
+     * @param {Request} req Represents request from client, including body
+     * containing the JSON object for the new user to be inserted in the database
+     * @param {Response} res Represents response to client, including the
+     * body formatted as JSON containing the new user that was inserted in the
+     * database or the status that user was not inserted successfully,
+     * because of repetitive username in the database
      */
     register = (req: Request, res: Response) => {
         const username = req.body.username
+        // not sure where to implement this logic
+        // in services?
+        // do we need interface for services
         UserController.userDao.findUserByUsername(username)
             .then((user: User) => {
                 if (user) {
                     res.sendStatus(403);
                 } else {
-                    res.json(user);
+                    UserController.userDao.createUser(req.body)
+                        .then((newUser: User) => res.json(newUser))
                 }
             })
     }
