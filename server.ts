@@ -15,7 +15,6 @@
  */
 import express from 'express';
 import mongoose from "mongoose";
-import dotenv from "dotenv"
 import cors from "cors";
 import bodyParser from "body-parser";
 import TuitController from "./controllers/TuitController";
@@ -28,7 +27,6 @@ import MessageController from "./controllers/MessageController";
 
 const app = express();
 
-dotenv.config();
 app.use(cors());
 const MONGODB_URI = "mongodb://localhost:27017/tuiter";
 // connect to the database
@@ -39,13 +37,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-
-app.get('/hello', (req, res) =>
-    res.send('Hello World!'));
-
-app.get('/add/:a/:b', (req, res) => {
-    res.send(req.params.a + req.params.b);
-})
 
 // Create RESTful Web service API
 const userController = UserController.getInstance(app);

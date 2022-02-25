@@ -103,4 +103,49 @@ export default class UserController implements UserControllerI {
     updateUser = (req: Request, res: Response) =>
         UserController.userDao.updateUser(req.params.uid, req.body)
             .then(status => res.json(status))
+
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    login = (req: Request, res: Response) => {
+        const credentials = req.body;
+        UserController.userDao.findUserByCredentials(credentials.username, credentials.password)
+            .then((user: User) => {
+                if (user) {
+                    res.json(user);
+                } else {
+                    res.sendStatus(403);
+                }
+            })
+    }
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    logout = (req: Request, res: Response) => {
+        // implement session later...
+    }
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    register = (req: Request, res: Response) => {
+        const username = req.body.username
+        UserController.userDao.findUserByUsername(username)
+            .then((user: User) => {
+                if (user) {
+                    res.sendStatus(403);
+                } else {
+                    res.json(user);
+                }
+            })
+    }
+
 }
