@@ -84,4 +84,12 @@ export default class UserDao implements UserDaoI {
      */
     findUserByUsername = async (username: string): Promise<any> =>
         UserModel.findOne({username});
+
+    /**
+     * Removes the user instance in the database that matches the username
+     * @param {string} username User's username
+     * @returns Promise To be notified when user is removed from the database
+     */
+    deleteUserByUsername = async (username: string): Promise<any> =>
+        UserModel.deleteOne({username});
 }

@@ -157,4 +157,14 @@ export default class UserController implements UserControllerI {
             })
     }
 
+    /**
+     * Removes the user instance that matches the username
+     * @param {Request} req Represents request from client, including path
+     * parameter username identifying the username of the user to be removed
+     * @param {Response} res Represents response to client, including status
+     * on whether deleting a user was successful or not
+     */
+    deleteUserByUsername = (req: Request, res: Response) =>
+       UserController.userDao.deleteUserByUsername(req.params.username)
+           .then(status => res.send(status));
 }
