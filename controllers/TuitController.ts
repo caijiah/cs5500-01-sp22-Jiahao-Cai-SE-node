@@ -18,7 +18,7 @@ import Tuit from "../models/tuits/Tuit";
  *     a given user</li>
  *     <li>PUT /api/tuits/:tid to modify an individual tuit instance </li>
  *     <li>DELETE /api/tuits/:tid to remove a particular tuit instance </li>
- *     <li>DELETE /api/tuits/:content to remove a tuit that matches the content</li>
+ *     <li>DELETE /api/tuits/byContent to remove a tuit that matches the content</li>
  * </ul>
  * @property {TuitDao} tuitDao Singleton DAO implementing tuit CRUD operations
  * @property {TuitController} tuitController Singleton controller implementing
@@ -44,7 +44,7 @@ export default class TuitController implements TuitControllerI {
             app.post("/api/users/:uid/tuits", TuitController.tuitController.createTuitByUser);
             app.put('/api/tuits/:tid', TuitController.tuitController.updateTuit);
             app.delete('/api/tuits/:tid', TuitController.tuitController.deleteTuit);
-            app.post('/api/tuits/byContent', TuitController.tuitController.deleteTuitByContent)
+            app.delete('/api/tuits/byContent/:content', TuitController.tuitController.deleteTuitByContent)
         }
         return TuitController.tuitController
     }
@@ -143,7 +143,9 @@ export default class TuitController implements TuitControllerI {
      * @param {Response} res Represents response to client, including status
      * on whether deleting a tuit was successful or not
      */
-    deleteTuitByContent = (req: Request, res: Response) =>
-        TuitController.tuitDao.deleteTuitByContent(req.body)
+    deleteTuitByContent = (req: Request, res: Response) => {
+        // const content = req.body.tuit
+        TuitController.tuitDao.deleteTuitByContent(req.params.content)
             .then(status => res.json(status))
+    }
 }
