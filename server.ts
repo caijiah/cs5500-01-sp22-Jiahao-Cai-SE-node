@@ -23,14 +23,18 @@ import LikeController from "./controllers/LikeController";
 import FollowController from "./controllers/FollowController";
 import BookmarkController from "./controllers/BookmarkController";
 import MessageController from "./controllers/MessageController";
-
+const session = require("express-session")
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    credentials: true,
+    origin: process.env.CLIENT_URL
+}));
 const MONGODB_URI = "mongodb://localhost:27017/tuiter";
 // connect to the database
 mongoose.connect(process.env.MONGODB_URI || MONGODB_URI);
+
 
 // configure HTTP body parser
 app.use(bodyParser.json());
