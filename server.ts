@@ -27,10 +27,27 @@ const session = require("express-session")
 
 const app = express();
 
+const CLIENT_ULR = process.env.CLIENT_URL || 'http://localhost:3000';
 app.use(cors({
     credentials: true,
-    origin: process.env.CLIENT_URL
+    origin: CLIENT_ULR
 }));
+
+const SECRET = 'keyboard cat'
+let sess = {
+    secret: SECRET,
+    cookie: {
+        secure: false
+    }
+}
+
+if (process.env.ENV === 'PRODUCTION') {
+    app.set('trust proxy', 1) // trust first proxy
+    sess.cookie.secure = true // serve secure cookies
+}
+
+app.use(session(sess));
+
 const MONGODB_URI = "mongodb://localhost:27017/tuiter";
 // connect to the database
 mongoose.connect(process.env.MONGODB_URI || MONGODB_URI);
