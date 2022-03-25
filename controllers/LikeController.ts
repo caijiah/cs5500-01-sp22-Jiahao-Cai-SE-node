@@ -89,7 +89,7 @@ export default class LikeController implements LikeControllerI {
      * the database
      */
     userLikesTuit = (req: Request, res: Response) =>
-        LikeController.likeDao.userLikesTuit(req.params.tid, req.params.uid)
+        LikeController.likeDao.userLikesTuit(req.params.uid, req.params.tid)
             .then((like: Like) => res.json(like))
 
     /**
@@ -101,7 +101,7 @@ export default class LikeController implements LikeControllerI {
      * on whether deleting the like was successful or not
      */
     userUnLikesTuit = (req: Request, res: Response) =>
-        LikeController.likeDao.userUnlikesTuit(req.params.tid, req.params.uid)
+        LikeController.likeDao.userUnlikesTuit(req.params.uid, req.params.tid)
             .then(status => res.send(status))
 
     /**
@@ -137,6 +137,8 @@ export default class LikeController implements LikeControllerI {
         try {
             const userAlreadyLikedTuit = await likeDao.findUserLikesTuit(userId, tid);
             const howManyLikedTuit = await likeDao.countHowManyLikedTuit(tid);
+            console.log(howManyLikedTuit)
+            console.log(userId)
             let tuit = await tuitDao.findTuitById(tid);
             if (userAlreadyLikedTuit) {
                 await likeDao.userUnlikesTuit(userId, tid);
@@ -148,6 +150,7 @@ export default class LikeController implements LikeControllerI {
             await tuitDao.updateLikes(tid, tuit.stats);
             res.sendStatus(200);
         } catch (e) {
+            console.log(e);
             res.sendStatus(404);
         }
     }
