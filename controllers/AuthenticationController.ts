@@ -24,7 +24,7 @@ const saltRounds = 10;
  */
 export default class AuthenticationController implements AuthenticationControllerI {
     private static userDao: UserDao = UserDao.getInstance();
-    private static authenticationController: AuthenticationController | null;
+    private static authenticationController: AuthenticationController | null = null;
 
     /**
      * Creates singleton controller instance
@@ -34,16 +34,15 @@ export default class AuthenticationController implements AuthenticationControlle
     public static getInstance = (app: Express): AuthenticationController => {
         if (AuthenticationController.authenticationController === null) {
             AuthenticationController.authenticationController = new AuthenticationController();
-            app.post("/api/auth/login", AuthenticationController.authenticationController.login);
-            app.post("/api/auth/register", AuthenticationController.authenticationController.register);
-            app.post("/api/auth/profile", AuthenticationController.authenticationController.profile);
-            app.post("api/auth/logout", AuthenticationController.authenticationController.logout);
+            app.post('/api/auth/login', AuthenticationController.authenticationController.login);
+            app.post('/api/auth/signup', AuthenticationController.authenticationController.signup);
+            app.post('/api/auth/profile', AuthenticationController.authenticationController.profile);
+            app.post('/api/auth/logout', AuthenticationController.authenticationController.logout);
         }
         return AuthenticationController.authenticationController;
     }
 
-    private constructor() {
-    }
+    private constructor() {}
 
     /**
      * Retrieves the user by their credential for logging in
@@ -60,6 +59,8 @@ export default class AuthenticationController implements AuthenticationControlle
         const password = user.password;
         const existingUser = await AuthenticationController.userDao
             .findUserByUsername(username);
+        // console.log(password)
+        // console.log(existingUser.password)
         const match = await bcrypt.compare(password, existingUser.password);
 
         if (match) {
@@ -80,7 +81,7 @@ export default class AuthenticationController implements AuthenticationControlle
      * database or the status that user was not inserted successfully,
      * because of repetitive username in the database
      */
-    register = async (req: Request, res: Response) => {
+    signup = async (req: Request, res: Response) => {
         const newUser = req.body;
         const password = newUser.password;
         newUser.password = await bcrypt.hash(password, saltRounds);
@@ -88,6 +89,7 @@ export default class AuthenticationController implements AuthenticationControlle
             .findUserByUsername(newUser.username);
 
         if (existingUser) {
+            existingUser.password = '*****';
             res.sendStatus(403);
             return;
         } else {
@@ -125,7 +127,7 @@ export default class AuthenticationController implements AuthenticationControlle
      */
     logout = (req: Request, res: Response) => {
         // @ts-ignore
-        req.session.destory();
+        req.session.destroy();
         res.sendStatus(200);
     }
 
