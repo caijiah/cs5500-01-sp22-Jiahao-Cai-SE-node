@@ -48,7 +48,12 @@ export default class LikeDao implements LikeDaoI {
      */
     findAllTuitsLikedByUser = async (uid: string): Promise<Like[]> =>
         LikeModel.find({likedBy: uid})
-            .populate("tuit")
+            .populate({
+                path: "tuit",
+                populate: {
+                    path: "postedBy"
+                }
+            })
             .exec();
 
     /**
@@ -66,10 +71,27 @@ export default class LikeDao implements LikeDaoI {
      * representing a user unlikes a tuit
      * @param {string} tid Tuit's primary key
      * @param {string} uid User's primary key
-     * @returns Promise To be notified when like is removed from the databse
+     * @returns Promise To be notified when like is removed from the database
      */
     userUnlikesTuit = async (tid: string, uid: string): Promise<any> =>
         LikeModel.deleteOne({tuit: tid, likedBy: uid})
+
+    /**
+     * Use LikeModel to determine if a user likes a tuit.
+     * @param {string} uid user's primary key
+     * @param {string} tid Tuit's primary key
+     * @returns Promise To be notified when like is found from the database
+     */
+    findUserLikesTuit = async (uid: string, tid: string): Promise<any> =>
+        LikeModel.findOne({tuit: tid, likedBy: uid});
+
+    /**
+     * Use LikeModel to count how many likes a tuit has.
+     * @param {string} tid Tuit's primary key
+     * @returns Promise To be notified when count is retrieved from that database
+     */
+    countHowManyLikedTuit = async (tid: string): Promise<any> =>
+        LikeModel.count({tuit: tid});
 
     /**
      * Uses LikeModel to retrieve all like documents from likes collection
