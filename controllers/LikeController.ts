@@ -83,16 +83,21 @@ export default class LikeController implements LikeControllerI {
         const profile = req.session['profile'];
         const userId = uid === 'me' && profile ?
             profile._id : uid;
-        try {
-            LikeController.likeDao.findAllTuitsLikedByUser(userId)
-                .then( async (likes: Like[]) => {
-                    const likesNonNullTuits = likes.filter(like => like.tuit);
-                    const tuitsFromLikes = likesNonNullTuits.map(like => like.tuit);
-                    const fetchTuits = await LikeController.tuitService.fetchTuitsForLikesDisLikeOwn(userId, tuitsFromLikes);
-                    res.json(fetchTuits);
-                });
-        } catch (e) {
+
+        if (userId === 'me') {
             res.sendStatus(403);
+        } else {
+            try {
+                LikeController.likeDao.findAllTuitsLikedByUser(userId)
+                    .then( async (likes: Like[]) => {
+                        const likesNonNullTuits = likes.filter(like => like.tuit);
+                        const tuitsFromLikes = likesNonNullTuits.map(like => like.tuit);
+                        const fetchTuits = await LikeController.tuitService.fetchTuitsForLikesDisLikeOwn(userId, tuitsFromLikes);
+                        res.json(fetchTuits);
+                    });
+            } catch (e) {
+                res.sendStatus(403);
+            }
         }
     }
 
