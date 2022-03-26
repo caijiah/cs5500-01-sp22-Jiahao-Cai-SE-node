@@ -83,7 +83,11 @@ export default class LikeController implements LikeControllerI {
             profile._id : uid;
         try {
             LikeController.likeDao.findAllTuitsLikedByUser(userId)
-                .then((likes: Like[]) => res.json(likes));
+                .then((likes: Like[]) => {
+                    const likesNonNullTuits = likes.filter(like => like.tuit);
+                    const tuitsFromLikes = likesNonNullTuits.map(like => like.tuit);
+                    res.json(tuitsFromLikes);
+                });
         } catch (e) {
             res.sendStatus(403);
         }

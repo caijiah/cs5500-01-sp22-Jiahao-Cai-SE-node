@@ -5,6 +5,7 @@ import {Request, Response, Express} from "express";
 import TuitDao from "../daos/TuitDao";
 import TuitControllerI from "../interfaces/TuitControllerI";
 import Tuit from "../models/tuits/Tuit";
+import TuitService from "../services/TuitService";
 
 /**
  * @class TuitController Implements RESTful Web service API for tuits resource.
@@ -26,6 +27,7 @@ import Tuit from "../models/tuits/Tuit";
  */
 export default class TuitController implements TuitControllerI {
     private static tuitDao: TuitDao = TuitDao.getInstance();
+    private static tuitService: TuitService = TuitService.getInstance();
     private static tuitController: TuitController | null = null;
 
     /**
@@ -57,9 +59,24 @@ export default class TuitController implements TuitControllerI {
      * @param {Response} res Represents response to client, including the
      * body formatted as JSON arrays containing the tuit objects
      */
-    findAllTuits = (req: Request, res: Response) =>
-        TuitController.tuitDao.findAllTuits()
-            .then((tuits: Tuit[]) => res.json(tuits));
+    findAllTuits = (req: Request, res: Response) => {
+        // @ts-ignore
+        const profile = req.session['profile'];
+        if (profile) {
+            // @ts-ignore
+            const userId = profile._id;
+            TuitController.tuitDao.findAllTuits()
+                .then(async (tuits: Tuit[]) => {
+                    const fetchTuits = await TuitController.tuitService
+                        .fetchTuitsForLikesDisLikeOwn(userId, tuits);
+                    res.json(fetchTuits);
+                })
+        } else {
+            TuitController.tuitDao.findAllTuits()
+                .then((tuits: Tuit[]) => res.json(tuits));
+        }
+    }
+
 
     /**
      * Retrieves the tuit by its primary key
@@ -90,7 +107,11 @@ export default class TuitController implements TuitControllerI {
             res.sendStatus(403);
         } else {
             TuitController.tuitDao.findTuitsByUser(userId)
-                .then((tuit: Tuit[]) => res.json(tuit));
+                .then( async (tuits: Tuit[]) => {
+                    const fetchTuits = await TuitController.tuitService
+                        .fetchTuitsForLikesDisLikeOwn(userId, tuits);
+                    res.json(fetchTuits);
+                })
         }
     }
 
