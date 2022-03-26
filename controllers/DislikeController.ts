@@ -4,11 +4,13 @@ import DislikeControllerI from "../interfaces/DislikeControllerI";
 import Dislike from "../models/dislikes/Dislike";
 import TuitDao from "../daos/TuitDao";
 import LikeDao from "../daos/LikeDao";
+import TuitService from "../services/TuitService";
 
 export default class DislikeController implements DislikeControllerI {
     private static dislikeDao: DislikeDao = DislikeDao.getInstance();
     private static likeDao: LikeDao = LikeDao.getInstance();
     private static tuitDao: TuitDao = TuitDao.getInstance();
+    private static tuitService: TuitService = TuitService.getInstance();
     private static dislikeController: DislikeController | null = null;
 
     public static getInstance = (app: Express): DislikeController => {
@@ -30,11 +32,20 @@ export default class DislikeController implements DislikeControllerI {
         const userId = uid === 'me' && profile ?
             profile._id : uid;
 
-        try {
-            DislikeController.dislikeDao.findAllTuitsDislikedByUser(userId)
-                .then((dislikes: Dislike[]) => res.json(dislikes))
-        } catch (e) {
+        if (userId === 'me') {
             res.sendStatus(403);
+        } else {
+            try {
+                DislikeController.dislikeDao.findAllTuitsDislikedByUser(userId)
+                    .then( async (likes: Dislike[]) => {
+                        const dislikesNonNullTuits = likes.filter(dislike => dislike.tuit);
+                        const tuitsFromDislikes = dislikesNonNullTuits.map(dislike => dislike.tuit);
+                        const fetchTuits = await DislikeController.tuitService.fetchTuitsForLikesDisLikeOwn(userId, tuitsFromDislikes);
+                        res.json(fetchTuits);
+                    });
+            } catch (e) {
+                res.sendStatus(403);
+            }
         }
     }
 
