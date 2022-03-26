@@ -28,17 +28,21 @@ const session = require("express-session")
 
 const app = express();
 
-const CLIENT_ULR = process.env.CLIENT_URL || 'http://localhost:3000';
+//
+const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:3000';
+const CLIENT_URLs = [CLIENT_URL, 'http://localhost']
 app.use(cors({
     credentials: true,
-    origin: CLIENT_ULR
+    origin: CLIENT_URLs
 }));
 
 const SECRET = 'keyboard cat'
 let sess = {
     secret: SECRET,
+    proxy: true,
     cookie: {
-        secure: false
+        secure: true,
+        sameSite: 'none'
     }
 }
 
