@@ -29,7 +29,7 @@ const session = require("express-session")
 
 const app = express();
 
-//
+// for testing locally, add localhost as client urls
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:3000';
 const CLIENT_URLs = [CLIENT_URL, 'http://localhost']
 app.use(cors({
