@@ -33,7 +33,7 @@ export default class TuitDao implements TuitDaoI {
      * database
      */
     findAllTuits = async (): Promise<Tuit[]> =>
-        TuitModel.find().populate('postedBy').exec();
+        TuitModel.find();
 
     /**
      * Uses TuitModel to retrieve all tuits documents posted by a particular
@@ -43,7 +43,7 @@ export default class TuitDao implements TuitDaoI {
      * database
      */
     findTuitsByUser = async (uid: string): Promise<Tuit[]> =>
-        TuitModel.find({postedBy: uid}).populate("postedBy").exec();
+        TuitModel.find({postedBy: uid});
 
     /**
      * Uses TuitModel to retrieve single tuit document from tuits collection
@@ -80,30 +80,10 @@ export default class TuitDao implements TuitDaoI {
         TuitModel.updateOne({_id: tid}, {$set: tuit})
 
     /**
-     * Updates tuit with new stats in database
-     * @param {string} tid Tuit's primary key
-     * @param {any} newStats Stats object containing properties and their new values
-     * @returns Promise To be notified when tuit is updated in the database
-     */
-    updateLikes = async (tid: string, newStats: any): Promise<any> =>
-        TuitModel.updateOne(
-            {_id: tid},
-            {$set: {stats: newStats}}
-        );
-
-    /**
      * Removes tuit from the database
      * @param {string} tid Tuit's primary key
      * @returns Promise To be notified when tuit is removed from the database
      */
     deleteTuit = async (tid: string): Promise<any> =>
         TuitModel.deleteOne({_id: tid});
-
-    /**
-     * Removes tuit that matches the content
-     * @param {string} content Tuit's content
-     * @returns Promise To be notified when tuit is removed from the database
-     */
-    deleteTuitByContent = async (content: string): Promise<any> =>
-        TuitModel.deleteMany({tuit: content})
 }
