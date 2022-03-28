@@ -22,14 +22,12 @@ import DislikeDao from "../daos/DislikeDao";
  *         GET /api/tuits/:tid/likes to retrieve all users that liked a tuit
  *     </li>
  *     <li>
- *         POST /api/users/:uid/likes/:tid to record that a user likes a tuit
- *     </li>
- *     <li>
- *         DELETE /api/users/:uid/unlikes/:tid to record that a user no longer likes a tuit
+ *         PUT /api/users/:uid/likes/:tid to record that a user likes/unlikes a tuit
  *     </li>
  * </ul>
  * @property {LikeDao} likeDao Singleton DAO implementing like CRUD operations
- * @property {TuitDao} tuitDao Singletion DAO implementing tuit CRUD operations
+ * @property {TuitDao} tuitDao Singleton DAO implementing tuit CRUD operations
+ * @property {DislikeDao} dislikeDao Singleton DAO implementing dislike CRUD operations
  * @property {LikeController} likeController Singleton controller implementing
  * RESTful Web service API
  */
@@ -128,7 +126,8 @@ export default class LikeController implements LikeControllerI {
 
     /**
      * Implements logic for user likes a tuit. If a user already liked a tuit, removes the like;
-     * otherwise insert this like into the database.
+     * otherwise insert this like into the database. If a user already disliked a tuit, removes the dislike
+     * and then insert this like into the database.
      * @param {Request} req Represents request from client, including the
      * path parameters uid and tid representing the user that is liking the tuit
      * and the tuit being liked
