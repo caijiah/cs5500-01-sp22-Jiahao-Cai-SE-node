@@ -93,9 +93,13 @@ export default class TuitController implements TuitControllerI {
             const userId = profile._id;
             TuitController.tuitDao.findTuitById(req.params.tid)
                 .then( async (tuit: Tuit) => {
-                    const fetchTuits = await TuitController.tuitService
-                        .fetchTuitsForLikesDisLikeOwn(userId, [tuit]);
-                    res.json(fetchTuits[0]);
+                    if (tuit) {
+                        const fetchTuits = await TuitController.tuitService
+                            .fetchTuitsForLikesDisLikeOwn(userId, [tuit]);
+                        res.json(fetchTuits[0]);
+                    } else {
+                        res.json(tuit);
+                    }
                 });
         } else {
             TuitController.tuitDao.findTuitById(req.params.tid)
