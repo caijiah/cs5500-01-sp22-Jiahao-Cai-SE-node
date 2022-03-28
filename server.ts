@@ -40,7 +40,8 @@ app.use(cors({
 const SECRET = 'keyboard cat'
 let sess = {
     secret: SECRET,
-    proxy: false,
+    saveUninitialized: true,
+    resave: true,
     cookie: {
         secure: false,
         sameSite: "strict"
@@ -49,8 +50,8 @@ let sess = {
 
 if (process.env.ENV === 'PRODUCTION') {
     app.set('trust proxy', 1) // trust first proxy
-    app.enable("trust proxy");
-    sess.proxy = true
+    // app.enable("trust proxy");
+    // sess.proxy = true
     sess.cookie.secure = true // serve secure cookies
     sess.cookie.sameSite = "none";
 }
