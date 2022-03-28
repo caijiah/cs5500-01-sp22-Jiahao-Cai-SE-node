@@ -1,11 +1,23 @@
+/**
+ * @file Implements some service for helping retrieve tuit resources
+ */
 import LikeDao from "../daos/LikeDao";
 import DislikeDao from "../daos/DislikeDao";
 import Tuit from "../models/tuits/Tuit";
 
+/**
+ * @class TuitService Implements Tuit service that provides some helper functions
+ * for helping retrieve the tuits data for complicated needs, for example:
+ * Retrieve tuits when user logged in, it will also check if user owns the tuit, likes/dislikes the tuit
+ */
 export default class TuitService {
     public static tuitService: TuitService | null = null;
     private static likeDao: LikeDao = LikeDao.getInstance();
     private static dislikeDao: DislikeDao = DislikeDao.getInstance();
+    /**
+     * Creates singleton Service instance
+     * @returns TuitService
+     */
     public static getInstance = (): TuitService => {
         if (TuitService.tuitService === null) {
             TuitService.tuitService = new TuitService();
@@ -15,6 +27,14 @@ export default class TuitService {
 
     private constructor() {}
 
+    /**
+     * Iterating through given tuits, check if each tuit is owned by given user, and
+     * also check if given user likes/dislikes the tuit and inserts likedByMe, dislikedByMe,
+     * and ownedByMe attributes to the tuit object. This helps the client to determine if user
+     * likes/dislikes/owns the tuit and display different view.
+     * @param {any} userId User's primary key
+     * @param {Tuit[]} tuits An array of tuits
+     */
     public fetchTuitsForLikesDisLikeOwn = async (userId: any, tuits: Tuit[]): Promise<any[]> => {
         let findLikesPromises: any[] = []
         let findDislikesPromises: any[] = []
