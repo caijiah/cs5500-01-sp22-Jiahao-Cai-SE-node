@@ -24,27 +24,35 @@ import FollowController from "./controllers/FollowController";
 import BookmarkController from "./controllers/BookmarkController";
 import MessageController from "./controllers/MessageController";
 import AuthenticationController from "./controllers/AuthenticationController";
+import DislikeController from "./controllers/DislikeController";
 const session = require("express-session")
 
 const app = express();
 
-const CLIENT_ULR = process.env.CLIENT_URL || 'http://localhost:3000';
+//
+const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:3000';
+const CLIENT_URLs = [CLIENT_URL, 'http://localhost']
 app.use(cors({
     credentials: true,
-    origin: CLIENT_ULR
+    origin: CLIENT_URLs
 }));
 
 const SECRET = 'keyboard cat'
 let sess = {
     secret: SECRET,
+    proxy: false,
     cookie: {
-        secure: false
+        secure: false,
+        sameSite: "strict"
     }
 }
 
 if (process.env.ENV === 'PRODUCTION') {
     app.set('trust proxy', 1) // trust first proxy
+    app.enable("trust proxy");
+    sess.proxy = true
     sess.cookie.secure = true // serve secure cookies
+    sess.cookie.sameSite = "none";
 }
 
 app.use(session(sess));
@@ -68,6 +76,7 @@ const followController = FollowController.getInstance(app);
 const bookmarkController = BookmarkController.getInstance(app);
 const messageController = MessageController.getInstance(app);
 const authenticationController = AuthenticationController.getInstance(app);
+const dislikeController = DislikeController.getInstance(app);
 
 /**
  * Start a server listening at port 4000 locally

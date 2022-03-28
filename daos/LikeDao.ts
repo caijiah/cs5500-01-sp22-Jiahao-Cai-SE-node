@@ -86,7 +86,7 @@ export default class LikeDao implements LikeDaoI {
         LikeModel.findOne({tuit: tid, likedBy: uid});
 
     /**
-     * Use LikeModel to count how many likes a tuit has.
+     * Uses LikeModel to count how many likes a tuit has.
      * @param {string} tid Tuit's primary key
      * @returns Promise To be notified when count is retrieved from that database
      */
