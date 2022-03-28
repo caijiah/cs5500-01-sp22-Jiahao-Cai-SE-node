@@ -7,6 +7,7 @@ import LikeControllerI from "../interfaces/LikeControllerI";
 import Like from "../models/likes/Like";
 import TuitDao from "../daos/TuitDao";
 import DislikeDao from "../daos/DislikeDao";
+import TuitService from "../services/TuitService";
 
 /**
  * @class LikeController Implements RESTful Web service API for likes resource
@@ -35,6 +36,7 @@ export default class LikeController implements LikeControllerI {
     private static likeDao: LikeDao = LikeDao.getInstance();
     private static tuitDao: TuitDao = TuitDao.getInstance();
     private static dislikeDao: DislikeDao = DislikeDao.getInstance();
+    private static tuitService: TuitService = TuitService.getInstance();
     private static likeController: LikeController | null = null;
 
     /**
@@ -79,11 +81,21 @@ export default class LikeController implements LikeControllerI {
         const profile = req.session['profile'];
         const userId = uid === 'me' && profile ?
             profile._id : uid;
-        try {
-            LikeController.likeDao.findAllTuitsLikedByUser(userId)
-                .then((likes: Like[]) => res.json(likes));
-        } catch (e) {
+
+        if (userId === 'me') {
             res.sendStatus(403);
+        } else {
+            try {
+                LikeController.likeDao.findAllTuitsLikedByUser(userId)
+                    .then( async (likes: Like[]) => {
+                        const likesNonNullTuits = likes.filter(like => like.tuit);
+                        const tuitsFromLikes = likesNonNullTuits.map(like => like.tuit);
+                        const fetchTuits = await LikeController.tuitService.fetchTuitsForLikesDisLikeOwn(userId, tuitsFromLikes);
+                        res.json(fetchTuits);
+                    });
+            } catch (e) {
+                res.sendStatus(403);
+            }
         }
     }
 
