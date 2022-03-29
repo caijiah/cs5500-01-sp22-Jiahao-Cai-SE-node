@@ -37,7 +37,7 @@ app.use(cors({
     origin: CLIENT_URLs
 }));
 
-const SECRET = 'keyboard cat'
+const SECRET = process.env.SERECT || 'keyboard cat'
 let sess = {
     secret: SECRET,
     saveUninitialized: true,
