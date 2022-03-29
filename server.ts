@@ -17,6 +17,7 @@ import express from 'express';
 import mongoose from "mongoose";
 import cors from "cors";
 import bodyParser from "body-parser";
+import dotenv from "dotenv";
 import TuitController from "./controllers/TuitController";
 import UserController from "./controllers/UserController";
 import LikeController from "./controllers/LikeController";
@@ -27,6 +28,7 @@ import AuthenticationController from "./controllers/AuthenticationController";
 import DislikeController from "./controllers/DislikeController";
 const session = require("express-session")
 
+dotenv.config();
 const app = express();
 
 // for testing locally, add localhost as client urls
@@ -37,7 +39,7 @@ app.use(cors({
     origin: CLIENT_URLs
 }));
 
-const SECRET = process.env.SECRET || 'keyboard cat'
+const SECRET = process.env.SECRET
 let sess = {
     secret: SECRET,
     saveUninitialized: true,
