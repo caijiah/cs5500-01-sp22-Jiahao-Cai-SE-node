@@ -59,14 +59,15 @@ export default class AuthenticationController implements AuthenticationControlle
         const password = user.password;
         const existingUser = await AuthenticationController.userDao
             .findUserByUsername(username);
-        // console.log(password)
-        // console.log(existingUser.password)
-        const match = await bcrypt.compare(password, existingUser.password);
-
-        if (match) {
-            // @ts-ignore
-            req.session['profile'] = existingUser;
-            res.json(existingUser);
+        if (existingUser) {
+            const match = await bcrypt.compare(password, existingUser.password);
+            if (match) {
+                // @ts-ignore
+                req.session['profile'] = existingUser;
+                res.json(existingUser);
+            } else {
+                res.sendStatus(403);
+            }
         } else {
             res.sendStatus(403);
         }
